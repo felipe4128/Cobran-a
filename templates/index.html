@@ -1,59 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Contratos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: {{ cor_escura }};
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: {{ cor_primaria }};
-            padding: 20px;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-        }
-        a.botao {
-            display: inline-block;
-            background-color: {{ cor_secundaria }};
-            color: black;
-            padding: 10px 15px;
-            margin: 5px 5px 15px 0;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        table {
-            width: 100%%;
-            border-collapse: collapse;
-            background-color: white;
-            color: black;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: {{ cor_primaria }};
-            color: white;
-        }
+        body { background-color: #F8F9FA; }
+        .btn-sicoob { background-color: #00AE9D; color: white; }
+        .btn-sicoob:hover { background-color: #003641; }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Contratos</h1>
-    </header>
-    <main>
-        <a class="botao" href="/novo">➕ Novo Contrato</a>
-        <a class="botao" href="/exportar">📄 Exportar Excel</a>
-        <table>
+<body class="container mt-4">
+    <h1 class="mb-4 text-center text-dark">Lista de Contratos</h1>
+    <div class="mb-3 d-flex justify-content-between">
+        <a href="/novo" class="btn btn-sicoob">Novo Contrato</a>
+        <a href="/exportar" class="btn btn-outline-success">Exportar para Excel</a>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
             <tr>
                 <th>ID</th>
                 <th>Número</th>
@@ -63,18 +27,20 @@
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
+        </thead>
+        <tbody>
             {% for contrato in contratos %}
             <tr>
                 <td>{{ contrato.id }}</td>
                 <td>{{ contrato.numero }}</td>
                 <td>{{ contrato.cliente }}</td>
                 <td>{{ contrato.data.strftime('%d/%m/%Y') }}</td>
-                <td>R$ {{ contrato.valor }}</td>
+                <td>R$ {{ '%.2f'|format(contrato.valor) }}</td>
                 <td>{{ contrato.status }}</td>
-                <td><a class="botao" href="/contrato/{{ contrato.id }}">🔍 Ver</a></td>
+                <td><a href="{{ url_for('ver_contrato', id=contrato.id) }}" class="btn btn-sm btn-outline-primary">Ver</a></td>
             </tr>
             {% endfor %}
-        </table>
-    </main>
+        </tbody>
+    </table>
 </body>
 </html>

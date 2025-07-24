@@ -1,61 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Novo Contrato</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: {{ cor_escura }};
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        form {
-            background-color: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        input, select {
-            width: 100%%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        button {
-            background-color: {{ cor_primaria }};
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
+        body { background-color: #F8F9FA; }
+        .btn-sicoob { background-color: #00AE9D; color: white; }
+        .btn-sicoob:hover { background-color: #003641; }
     </style>
 </head>
-<body>
-    <h1>Novo Contrato</h1>
-    <form method="post">
-        <label>Número: <input type="text" name="numero" required></label>
-        <label>Cliente: <input type="text" name="cliente" required></label>
-        <label>Data: <input type="date" name="data" required></label>
-        <label>Valor: <input type="number" step="0.01" name="valor" required></label>
-        <label>Custas: <input type="number" step="0.01" name="custas" required></label>
-        <label>Juros mensal (ex: 0.02 para 2%%): <input type="number" step="0.001" name="juros" required></label>
-        <label>Prazo (meses): <input type="number" name="prazo" required></label>
-        <label>Forma de Pagamento:
-            <select name="forma_pagamento">
-                <option value="Boleto">Boleto</option>
-                <option value="Pix">Pix</option>
-                <option value="TED">TED</option>
-            </select>
-        </label>
-        <label>Tipo de Contrato: <input type="text" name="tipo_contrato"></label>
-        <label>Observações Contabilidade: <input type="text" name="obs_contabilidade"></label>
-        <button type="submit">Salvar Contrato</button>
+<body class="container mt-4">
+    <h1 class="text-center mb-4">Cadastrar Novo Contrato</h1>
+    <form method="POST" class="row g-3">
+        {% for campo in ['numero', 'cliente', 'data', 'valor', 'custas', 'juros', 'prazo', 'forma_pagamento', 'status', 'tipo_contrato', 'valor_abatido', 'ganho', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada', 'parcelas_restantes', 'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'valor_repassado_escritorio'] %}
+        <div class="col-md-4">
+            <label class="form-label">{{ campo.replace('_', ' ').title() }}</label>
+            <input type="text" name="{{ campo }}" class="form-control">
+        </div>
+        {% endfor %}
+        {% for campo in ['vencimento_entrada', 'data_pagamento_boleto', 'data_baixa'] %}
+        <div class="col-md-4">
+            <label class="form-label">{{ campo.replace('_', ' ').title() }}</label>
+            <input type="date" name="{{ campo }}" class="form-control">
+        </div>
+        {% endfor %}
+        <div class="col-12">
+            <label class="form-label">Observações para Contabilidade</label>
+            <textarea name="obs_contabilidade" class="form-control"></textarea>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Observações do Contas a Receber</label>
+            <textarea name="obs_contas_receber" class="form-control"></textarea>
+        </div>
+        <div class="col-12 form-check">
+            <input type="checkbox" name="baixa_acima_48_meses" class="form-check-input">
+            <label class="form-check-label">Baixa acima de 48 meses</label>
+        </div>
+        <div class="col-12 form-check">
+            <input type="checkbox" name="protesto" class="form-check-input">
+            <label class="form-check-label">Protesto</label>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-sicoob">Salvar Contrato</button>
+            <a href="/" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 </body>
 </html>
