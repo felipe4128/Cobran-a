@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Contratos</title></head>
+<body>
+    <h1>Contratos de Crédito</h1>
+    <a href="/novo">Novo Contrato</a> | <a href="/exportar">Exportar para Excel</a>
+    <ul>
+        {% for c in contratos %}
+            <li>
+                <a href="/contrato/{{ c.id }}">Contrato {{ c.numero }} - {{ c.cliente }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

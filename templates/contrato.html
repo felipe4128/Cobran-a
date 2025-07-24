@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><title>Contrato {{ contrato.numero }}</title></head>
+<body>
+    <h1>Contrato {{ contrato.numero }}</h1>
+    <form method="POST">
+        Cliente: <input name="cliente" value="{{ contrato.cliente }}"><br>
+        Status: <input name="status" value="{{ contrato.status }}"><br>
+        Tipo Contrato: <input name="tipo_contrato" value="{{ contrato.tipo_contrato }}"><br>
+        Obs. Contabilidade:<br>
+        <textarea name="obs_contabilidade">{{ contrato.obs_contabilidade }}</textarea><br>
+        <button type="submit">Salvar</button>
+    </form>
+    <h2>Parcelas</h2>
+    <ul>
+        {% for p in contrato.parcelas %}
+            <li>
+                {{ p.numero }} - {{ p.vencimento.strftime('%d/%m/%Y') }} - R$ {{ p.valor }} -
+                {% if p.pago %}
+                    ✅ Pago
+                {% else %}
+                    <a href="/parcela/pagar/{{ p.id }}">Marcar como pago</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Voltar</a>
+</body>
+</html>
