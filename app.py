@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import pandas as pd
 
@@ -52,6 +52,7 @@ class Contrato(db.Model):
     obs_contabilidade = db.Column(db.Text)
     obs_contas_receber = db.Column(db.Text)
     valor_repassado_escritorio = db.Column(db.Float)
+    data_contrato = db.Column(db.Date)
 
 @app.before_request
 def criar_tabelas():
@@ -66,6 +67,13 @@ def index():
 def novo():
     if request.method == 'POST':
         try:
+            data_contrato_str = request.form.get('data_contrato')
+            data_contrato = datetime.strptime(data_contrato_str, '%Y-%m-%d') if data_contrato_str else None
+
+            vencimento_entrada = datetime.strptime(request.form.get('vencimento_entrada'), '%Y-%m-%d') if request.form.get('vencimento_entrada') else data_contrato
+            parcelas = int(request.form.get('parcelas')) if request.form.get('parcelas') else None
+            vencimento_parcelas = datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else (data_contrato + timedelta(days=30) if data_contrato else None)
+
             contrato = Contrato(
                 cliente=request.form.get('cliente') or None,
                 numero=request.form.get('numero') or None,
@@ -84,17 +92,18 @@ def novo():
                 alvara=float(request.form.get('alvara')) if request.form.get('alvara') else None,
                 alvara_recebido=float(request.form.get('alvara_recebido')) if request.form.get('alvara_recebido') else None,
                 valor_entrada=float(request.form.get('valor_entrada')) if request.form.get('valor_entrada') else None,
-                vencimento_entrada=datetime.strptime(request.form.get('vencimento_entrada'), '%Y-%m-%d') if request.form.get('vencimento_entrada') else None,
-                parcelas=int(request.form.get('parcelas')) if request.form.get('parcelas') else None,
-                parcelas_restantes=int(request.form.get('parcelas_restantes')) if request.form.get('parcelas_restantes') else None,
-                vencimento_parcelas=datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else None,
+                vencimento_entrada=vencimento_entrada,
+                parcelas=parcelas,
+                parcelas_restantes=parcelas,
+                vencimento_parcelas=vencimento_parcelas,
                 qtd_boletos_emitidos=int(request.form.get('qtd_boletos_emitidos')) if request.form.get('qtd_boletos_emitidos') else None,
                 valor_pago_com_boleto=float(request.form.get('valor_pago_com_boleto')) if request.form.get('valor_pago_com_boleto') else None,
                 data_pagamento_boleto=datetime.strptime(request.form.get('data_pagamento_boleto'), '%Y-%m-%d') if request.form.get('data_pagamento_boleto') else None,
                 data_baixa=datetime.strptime(request.form.get('data_baixa'), '%Y-%m-%d') if request.form.get('data_baixa') else None,
                 obs_contabilidade=request.form.get('obs_contabilidade') or None,
                 obs_contas_receber=request.form.get('obs_contas_receber') or None,
-                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio')) if request.form.get('valor_repassado_escritorio') else None
+                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio')) if request.form.get('valor_repassado_escritorio') else None,
+                data_contrato=data_contrato
             )
             db.session.add(contrato)
             db.session.commit()
@@ -117,7 +126,7 @@ def ver_contrato(id):
                     setattr(contrato, field, float(value))
                 elif field in ['parcelas', 'parcelas_restantes', 'qtd_boletos_emitidos']:
                     setattr(contrato, field, int(value))
-                elif field in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa']:
+                elif field in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa', 'data_contrato']:
                     setattr(contrato, field, datetime.strptime(value, '%Y-%m-%d'))
                 else:
                     setattr(contrato, field, value)
