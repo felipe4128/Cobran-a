@@ -1,1 +1,14 @@
-<!-- Conteúdo exemplo para novo.html -->
+{% extends 'base.html' %}
+{% block title %}Novo Contrato{% endblock %}
+{% block content %}
+<form method="POST">
+    <label>Data Contrato: <input type="date" name="data_contrato"></label><br>
+    <label>Cliente: <input type="text" name="cliente"></label><br>
+    <label>Número: <input type="text" name="numero"></label><br>
+    <label>Tipo Contrato: <input type="text" name="tipo_contrato"></label><br>
+    <label>Garantia: <input type="text" name="garantia"></label><br>
+    <label>Valor: <input type="number" step="0.01" name="valor"></label><br>
+    <label>Parcelas: <input type="number" name="parcelas"></label><br>
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}

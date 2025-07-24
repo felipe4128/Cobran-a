@@ -1,1 +1,38 @@
-<!-- Conteúdo exemplo para index.html -->
+{% extends 'base.html' %}
+{% block title %}Lista de Contratos{% endblock %}
+{% block content %}
+<form method="POST" action="/deletar">
+    <table>
+        <thead>
+            <tr>
+                <th>Selecionar</th>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Contrato</th>
+                <th>Tipo</th>
+                <th>Garantia</th>
+                <th>Valor</th>
+                <th>Ações</th>
+                <th>Parcelas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contratos %}
+            <tr>
+                <td><input type="checkbox" name="ids" value="{{ c.id }}"></td>
+                <td>{{ c.id }}</td>
+                <td>{{ c.cliente }}</td>
+                <td>{{ c.numero }}</td>
+                <td>{{ c.tipo_contrato }}</td>
+                <td>{{ c.garantia }}</td>
+                <td>{{ c.valor }}</td>
+                <td><a href="{{ url_for('ver_contrato', id=c.id) }}">Ver</a></td>
+                <td>{{ c.parcelas_restantes }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Excluir Selecionados</button>
+</form>
+<p><a class="btn" href="{{ url_for('novo') }}">Novo Contrato</a> | <a class="btn" href="{{ url_for('exportar') }}">Exportar Excel</a></p>
+{% endblock %}

@@ -1,1 +1,26 @@
-<!-- Conteúdo exemplo para base.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Sistema de Crédito{% endblock %}</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background-color: #f8f9fa; }
+        .container { max-width: 1200px; margin: auto; }
+        header, footer { background-color: {{ cor_escura }}; color: white; padding: 10px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        .btn { padding: 6px 12px; text-decoration: none; background: {{ cor_primaria }}; color: white; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Contratos</h1>
+</header>
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+<footer>
+    <p>Sistema desenvolvido com Flask</p>
+</footer>
+</body>
+</html>

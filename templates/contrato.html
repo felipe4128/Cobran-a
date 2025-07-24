@@ -1,1 +1,13 @@
-<!-- Conteúdo exemplo para contrato.html -->
+{% extends 'base.html' %}
+{% block title %}Contrato Detalhado{% endblock %}
+{% block content %}
+<form method="POST">
+    {% for field, value in contrato.items() %}
+        <label>{{ field }}:
+            <input type="{{ 'date' if 'data' in field or 'vencimento' in field else 'text' }}"
+                   name="{{ field }}" value="{{ value if value is not none else '' }}">
+        </label><br>
+    {% endfor %}
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}
