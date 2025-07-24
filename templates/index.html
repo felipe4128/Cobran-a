@@ -1,15 +1,80 @@
+
 <!DOCTYPE html>
-<html>
-<head><title>Contratos</title></head>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Contratos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: {{ cor_escura }};
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: {{ cor_primaria }};
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        a.botao {
+            display: inline-block;
+            background-color: {{ cor_secundaria }};
+            color: black;
+            padding: 10px 15px;
+            margin: 5px 5px 15px 0;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%%;
+            border-collapse: collapse;
+            background-color: white;
+            color: black;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: {{ cor_primaria }};
+            color: white;
+        }
+    </style>
+</head>
 <body>
-    <h1>Contratos de Crédito</h1>
-    <a href="/novo">Novo Contrato</a> | <a href="/exportar">Exportar para Excel</a>
-    <ul>
-        {% for c in contratos %}
-            <li>
-                <a href="/contrato/{{ c.id }}">Contrato {{ c.numero }} - {{ c.cliente }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Contratos</h1>
+    </header>
+    <main>
+        <a class="botao" href="/novo">➕ Novo Contrato</a>
+        <a class="botao" href="/exportar">📄 Exportar Excel</a>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+            {% for contrato in contratos %}
+            <tr>
+                <td>{{ contrato.id }}</td>
+                <td>{{ contrato.numero }}</td>
+                <td>{{ contrato.cliente }}</td>
+                <td>{{ contrato.data.strftime('%d/%m/%Y') }}</td>
+                <td>R$ {{ contrato.valor }}</td>
+                <td>{{ contrato.status }}</td>
+                <td><a class="botao" href="/contrato/{{ contrato.id }}">🔍 Ver</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
 </body>
 </html>

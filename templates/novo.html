@@ -1,20 +1,61 @@
+
 <!DOCTYPE html>
-<html>
-<head><title>Novo Contrato</title></head>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Contrato</title>
+    <style>
+        body {
+            background-color: {{ cor_escura }};
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        form {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: {{ cor_primaria }};
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
 <body>
     <h1>Novo Contrato</h1>
-    <form method="POST">
-        Número: <input name="numero"><br>
-        Cliente: <input name="cliente"><br>
-        Data: <input type="date" name="data"><br>
-        Valor: <input name="valor"><br>
-        Custas: <input name="custas"><br>
-        Juros (ex: 0.01): <input name="juros"><br>
-        Prazo (meses): <input name="prazo"><br>
-        Forma de Pagamento: <input name="forma_pagamento"><br>
-        Tipo de Contrato: <input name="tipo_contrato"><br>
-        Obs. Contabilidade: <textarea name="obs_contabilidade"></textarea><br>
-        <button type="submit">Cadastrar</button>
+    <form method="post">
+        <label>Número: <input type="text" name="numero" required></label>
+        <label>Cliente: <input type="text" name="cliente" required></label>
+        <label>Data: <input type="date" name="data" required></label>
+        <label>Valor: <input type="number" step="0.01" name="valor" required></label>
+        <label>Custas: <input type="number" step="0.01" name="custas" required></label>
+        <label>Juros mensal (ex: 0.02 para 2%%): <input type="number" step="0.001" name="juros" required></label>
+        <label>Prazo (meses): <input type="number" name="prazo" required></label>
+        <label>Forma de Pagamento:
+            <select name="forma_pagamento">
+                <option value="Boleto">Boleto</option>
+                <option value="Pix">Pix</option>
+                <option value="TED">TED</option>
+            </select>
+        </label>
+        <label>Tipo de Contrato: <input type="text" name="tipo_contrato"></label>
+        <label>Observações Contabilidade: <input type="text" name="obs_contabilidade"></label>
+        <button type="submit">Salvar Contrato</button>
     </form>
 </body>
 </html>
