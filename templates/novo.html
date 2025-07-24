@@ -1,17 +1,1 @@
-{% extends 'base.html' %}
-{% block conteudo %}
-<h2>Novo Contrato</h2>
-<form method="post">
-    {% for campo in campos %}
-        <label>{{ campo.label }}:</label>
-        {% if campo.tipo == 'checkbox' %}
-            <input type="checkbox" name="{{ campo.nome }}" {% if campo.valor %}checked{% endif %}><br>
-        {% elif campo.tipo == 'textarea' %}
-            <textarea name="{{ campo.nome }}">{{ campo.valor or '' }}</textarea><br>
-        {% else %}
-            <input type="{{ campo.tipo }}" name="{{ campo.nome }}" value="{{ campo.valor or '' }}"><br>
-        {% endif %}
-    {% endfor %}
-    <button type="submit">Salvar</button>
-</form>
-{% endblock %}
+<!-- HTML novo -->
