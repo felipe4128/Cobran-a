@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Novo Contrato</title>
-    <style>
-        body { font-family: Arial; background-color: #f5f5f5; margin: 20px; }
-        form { display: flex; flex-wrap: wrap; gap: 10px; }
-        label { width: 100%; font-weight: bold; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 8px; }
-        button { background-color: #00AE9D; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Novo Contrato</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+    form div { margin-bottom: 10px; }
+    label { font-weight: bold; display: block; }
+    input, textarea { width: 100%; padding: 6px; }
+    button { padding: 10px 20px; background: #00AE9D; color: white; border: none; border-radius: 4px; }
+  </style>
 </head>
 <body>
-    <h1>Novo Contrato</h1>
-    <form method="POST">
-        {% for field in contrato_fields %}
-            <label>{{ field }}</label>
-            <input type="text" name="{{ field }}">
-        {% endfor %}
-        <button type="submit">Salvar</button>
-    </form>
+  <h1>Novo Contrato</h1>
+  <form method="POST">
+    {% for field in ['cliente', 'numero', 'tipo_contrato', 'garantia', 'valor', 'valor_abatido', 'ganho', 'custas', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada', 'parcelas', 'parcelas_restantes', 'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'valor_repassado_escritorio'] %}
+      <div>
+        <label>{{ field.replace('_',' ').title() }}</label>
+        <input type="text" name="{{ field }}">
+      </div>
+    {% endfor %}
+    {% for field in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa'] %}
+      <div>
+        <label>{{ field.replace('_',' ').title() }}</label>
+        <input type="date" name="{{ field }}">
+      </div>
+    {% endfor %}
+    <div><label>Baixa acima de 48 meses <input type="checkbox" name="baixa_acima_48_meses"></label></div>
+    <div><label>Protesto <input type="checkbox" name="protesto"></label></div>
+    <div>
+      <label>Observações Contabilidade</label>
+      <textarea name="obs_contabilidade"></textarea>
+    </div>
+    <div>
+      <label>Observações Contas a Receber</label>
+      <textarea name="obs_contas_receber"></textarea>
+    </div>
+    <button type="submit">Salvar</button>
+  </form>
 </body>
 </html>
