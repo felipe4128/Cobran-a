@@ -1,38 +1,26 @@
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Contratos</title>
-    <style>
-        body { font-family: Arial; background-color: #f8f8f8; }
-        h1 { background-color: {{ cor_escura }}; color: white; padding: 10px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
-        a.btn { display: inline-block; padding: 6px 12px; margin: 5px; background: {{ cor_primaria }}; color: white; text-decoration: none; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <h1>Lista de Contratos</h1>
-    <a href="/novo" class="btn">Novo Contrato</a>
-    <a href="/exportar" class="btn">Exportar para Excel</a>
-    <table>
-        <tr>
-            <th>Cliente</th>
-            <th>Número</th>
-            <th>Tipo</th>
-            <th>Valor</th>
-            <th>Ações</th>
-        </tr>
-        {% for c in contratos %}
-        <tr>
-            <td>{{ c.cliente }}</td>
-            <td>{{ c.numero }}</td>
-            <td>{{ c.tipo_contrato }}</td>
-            <td>R$ {{ "%.2f"|format(c.valor or 0) }}</td>
-            <td><a class="btn" href="/contrato/{{ c.id }}">Ver</a></td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Contratos</h2>
+<a href="{{ url_for('novo') }}" class="button">Novo Contrato</a>
+<a href="{{ url_for('exportar') }}" class="button">Exportar para Excel</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Contrato</th>
+        <th>Tipo</th>
+        <th>Garantia</th>
+        <th>Ações</th>
+    </tr>
+    {% for c in contratos %}
+    <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.cliente }}</td>
+        <td>{{ c.numero }}</td>
+        <td>{{ c.tipo_contrato }}</td>
+        <td>{{ c.garantia }}</td>
+        <td><a href="{{ url_for('ver_contrato', id=c.id) }}" class="button">Detalhes</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

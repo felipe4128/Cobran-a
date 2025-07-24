@@ -3,8 +3,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
-from math import pow
+from datetime import datetime
 import os
 import pandas as pd
 
@@ -13,7 +12,6 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'credito.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Adicionando cores do Sicoob ao contexto global dos templates
 @app.context_processor
 def inject_colors():
     return dict(
@@ -73,30 +71,30 @@ def novo():
                 numero=request.form.get('numero') or None,
                 tipo_contrato=request.form.get('tipo_contrato') or None,
                 garantia=request.form.get('garantia') or None,
-                valor=float(request.form.get('valor') or 0),
+                valor=float(request.form.get('valor')) if request.form.get('valor') else None,
                 baixa_acima_48_meses=bool(request.form.get('baixa_acima_48_meses')),
-                valor_abatido=float(request.form.get('valor_abatido') or 0),
-                ganho=float(request.form.get('ganho') or 0),
-                custas=float(request.form.get('custas') or 0),
-                custas_deduzidas=float(request.form.get('custas_deduzidas') or 0),
+                valor_abatido=float(request.form.get('valor_abatido')) if request.form.get('valor_abatido') else None,
+                ganho=float(request.form.get('ganho')) if request.form.get('ganho') else None,
+                custas=float(request.form.get('custas')) if request.form.get('custas') else None,
+                custas_deduzidas=float(request.form.get('custas_deduzidas')) if request.form.get('custas_deduzidas') else None,
                 protesto=bool(request.form.get('protesto')),
-                protesto_deduzido=float(request.form.get('protesto_deduzido') or 0),
-                honorario=float(request.form.get('honorario') or 0),
-                honorario_repassado=float(request.form.get('honorario_repassado') or 0),
-                alvara=float(request.form.get('alvara') or 0),
-                alvara_recebido=float(request.form.get('alvara_recebido') or 0),
-                valor_entrada=float(request.form.get('valor_entrada') or 0),
+                protesto_deduzido=float(request.form.get('protesto_deduzido')) if request.form.get('protesto_deduzido') else None,
+                honorario=float(request.form.get('honorario')) if request.form.get('honorario') else None,
+                honorario_repassado=float(request.form.get('honorario_repassado')) if request.form.get('honorario_repassado') else None,
+                alvara=float(request.form.get('alvara')) if request.form.get('alvara') else None,
+                alvara_recebido=float(request.form.get('alvara_recebido')) if request.form.get('alvara_recebido') else None,
+                valor_entrada=float(request.form.get('valor_entrada')) if request.form.get('valor_entrada') else None,
                 vencimento_entrada=datetime.strptime(request.form.get('vencimento_entrada'), '%Y-%m-%d') if request.form.get('vencimento_entrada') else None,
-                parcelas=int(request.form.get('parcelas') or 0),
-                parcelas_restantes=int(request.form.get('parcelas_restantes') or 0),
+                parcelas=int(request.form.get('parcelas')) if request.form.get('parcelas') else None,
+                parcelas_restantes=int(request.form.get('parcelas_restantes')) if request.form.get('parcelas_restantes') else None,
                 vencimento_parcelas=datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else None,
-                qtd_boletos_emitidos=int(request.form.get('qtd_boletos_emitidos') or 0),
-                valor_pago_com_boleto=float(request.form.get('valor_pago_com_boleto') or 0),
+                qtd_boletos_emitidos=int(request.form.get('qtd_boletos_emitidos')) if request.form.get('qtd_boletos_emitidos') else None,
+                valor_pago_com_boleto=float(request.form.get('valor_pago_com_boleto')) if request.form.get('valor_pago_com_boleto') else None,
                 data_pagamento_boleto=datetime.strptime(request.form.get('data_pagamento_boleto'), '%Y-%m-%d') if request.form.get('data_pagamento_boleto') else None,
                 data_baixa=datetime.strptime(request.form.get('data_baixa'), '%Y-%m-%d') if request.form.get('data_baixa') else None,
                 obs_contabilidade=request.form.get('obs_contabilidade') or None,
                 obs_contas_receber=request.form.get('obs_contas_receber') or None,
-                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio') or 0)
+                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio')) if request.form.get('valor_repassado_escritorio') else None
             )
             db.session.add(contrato)
             db.session.commit()

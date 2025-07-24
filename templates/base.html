@@ -1,34 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
     <title>Sistema de Crédito</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-      body {
-        background-color: #eafaf7;
-      }
-      .btn-success {
-        background-color: #00AE9D;
-        border-color: #00AE9D;
-      }
-      .btn-warning {
-        background-color: #C9D200;
-        border-color: #C9D200;
-        color: black;
-      }
-      .btn-primary {
-        background-color: #003641;
-        border-color: #003641;
-      }
+        body { font-family: Arial; background-color: #f4f4f4; margin: 0; }
+        header { background-color: #003641; color: white; padding: 1rem; text-align: center; }
+        .container { padding: 2rem; }
+        table { width: 100%%; border-collapse: collapse; margin-top: 1rem; }
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 0.5rem; text-align: left; }
+        a.button, button { background-color: #00AE9D; color: white; padding: 0.5rem 1rem; text-decoration: none; border: none; margin: 0.2rem; cursor: pointer; }
+        a.button:hover, button:hover { background-color: #00796B; }
     </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #003641;">
-      <div class="container">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Sicoob Crédito</a>
-      </div>
-    </nav>
-    {% block conteudo %}{% endblock %}
-  </body>
+</head>
+<body>
+    <header><h1>Sistema de Crédito</h1></header>
+    <div class="container">{% block conteudo %}{% endblock %}</div>
+</body>
 </html>
