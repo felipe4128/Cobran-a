@@ -1,1 +1,21 @@
-<!-- HTML novo -->
+{% extends "base.html" %}
+{% block title %}Novo Contrato{% endblock %}
+{% block content %}
+    <form method="post">
+        {% for field in [
+            'cliente', 'numero', 'tipo_contrato', 'garantia', 'valor', 'baixa_acima_48_meses',
+            'valor_abatido', 'ganho', 'custas', 'custas_deduzidas', 'protesto', 'protesto_deduzido',
+            'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada',
+            'vencimento_entrada', 'parcelas', 'parcelas_restantes', 'vencimento_parcelas',
+            'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'data_pagamento_boleto', 'data_baixa',
+            'obs_contabilidade', 'obs_contas_receber', 'valor_repassado_escritorio'] %}
+            <div class="mb-2">
+                <label class="form-label">{{ field.replace('_', ' ').capitalize() }}</label>
+                <input type="{{ 'checkbox' if field in ['protesto', 'baixa_acima_48_meses'] else 'date' if 'data' in field or 'vencimento' in field else 'number' if 'valor' in field or 'ganho' in field or 'custas' in field or 'honorario' in field or 'parcelas' in field or 'qtd' in field else 'text' }}" 
+                       name="{{ field }}" class="form-control" {% if field in ['protesto', 'baixa_acima_48_meses'] %}value="1"{% endif %}>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

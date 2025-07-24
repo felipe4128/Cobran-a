@@ -1,1 +1,14 @@
-<!-- HTML contrato -->
+{% extends "base.html" %}
+{% block title %}Detalhes do Contrato{% endblock %}
+{% block content %}
+    <form method="post">
+        {% for key, value in contrato.items() %}
+            <div class="mb-2">
+                <label class="form-label">{{ key.replace('_', ' ').capitalize() }}</label>
+                <input name="{{ key }}" value="{{ value or '' }}" class="form-control">
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+    </form>
+{% endblock %}
