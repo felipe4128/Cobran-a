@@ -1,15 +1,15 @@
-{% extends "base.html" %}
-{% block title %}Lista de Contratos{% endblock %}
+
+{% extends 'base.html' %}
 {% block content %}
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ url_for('novo') }}" class="btn btn-primary">Novo Contrato</a>
-        <a href="{{ url_for('exportar') }}" class="btn btn-secondary">Exportar para Excel</a>
-    </div>
-    <table class="table table-striped">
+<h2>Contratos</h2>
+<form method="POST" action="{{ url_for('deletar') }}">
+    <table border="1">
         <thead>
             <tr>
+                <th>Selecionar</th>
+                <th>ID</th>
                 <th>Cliente</th>
-                <th>Número</th>
+                <th>Contrato</th>
                 <th>Tipo</th>
                 <th>Garantia</th>
                 <th>Valor</th>
@@ -17,18 +17,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for c in contratos %}
+        {% for c in contratos %}
             <tr>
+                <td><input type="checkbox" name="ids" value="{{ c.id }}"></td>
+                <td>{{ c.id }}</td>
                 <td>{{ c.cliente }}</td>
                 <td>{{ c.numero }}</td>
                 <td>{{ c.tipo_contrato }}</td>
                 <td>{{ c.garantia }}</td>
                 <td>{{ c.valor }}</td>
-                <td>
-                    <a href="{{ url_for('ver_contrato', id=c.id) }}" class="btn btn-sm btn-primary">Ver</a>
-                </td>
+                <td><a href="{{ url_for('ver_contrato', id=c.id) }}">Ver</a></td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
+    <button type="submit">Excluir Selecionados</button>
+</form>
+<a href="{{ url_for('novo') }}">Novo Contrato</a> |
+<a href="{{ url_for('exportar') }}">Exportar Excel</a>
 {% endblock %}

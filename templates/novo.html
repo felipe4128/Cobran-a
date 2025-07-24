@@ -1,21 +1,37 @@
-{% extends "base.html" %}
-{% block title %}Novo Contrato{% endblock %}
+
+{% extends 'base.html' %}
 {% block content %}
-    <form method="post">
-        {% for field in [
-            'cliente', 'numero', 'tipo_contrato', 'garantia', 'valor', 'baixa_acima_48_meses',
-            'valor_abatido', 'ganho', 'custas', 'custas_deduzidas', 'protesto', 'protesto_deduzido',
-            'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada',
-            'vencimento_entrada', 'parcelas', 'parcelas_restantes', 'vencimento_parcelas',
-            'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'data_pagamento_boleto', 'data_baixa',
-            'obs_contabilidade', 'obs_contas_receber', 'valor_repassado_escritorio'] %}
-            <div class="mb-2">
-                <label class="form-label">{{ field.replace('_', ' ').capitalize() }}</label>
-                <input type="{{ 'checkbox' if field in ['protesto', 'baixa_acima_48_meses'] else 'date' if 'data' in field or 'vencimento' in field else 'number' if 'valor' in field or 'ganho' in field or 'custas' in field or 'honorario' in field or 'parcelas' in field or 'qtd' in field else 'text' }}" 
-                       name="{{ field }}" class="form-control" {% if field in ['protesto', 'baixa_acima_48_meses'] %}value="1"{% endif %}>
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<h2>Novo Contrato</h2>
+<form method="POST">
+    <label>Data do Contrato:</label><input type="date" name="data_contrato"><br>
+    <label>Cliente:</label><input type="text" name="cliente"><br>
+    <label>Número:</label><input type="text" name="numero"><br>
+    <label>Tipo de Contrato:</label><input type="text" name="tipo_contrato"><br>
+    <label>Garantia:</label><input type="text" name="garantia"><br>
+    <label>Valor:</label><input type="number" step="any" name="valor"><br>
+    <label>Baixa acima de 48 meses:</label><input type="checkbox" name="baixa_acima_48_meses"><br>
+    <label>Valor Abatido:</label><input type="number" step="any" name="valor_abatido"><br>
+    <label>Ganho:</label><input type="number" step="any" name="ganho"><br>
+    <label>Custas:</label><input type="number" step="any" name="custas"><br>
+    <label>Custas Deduzidas:</label><input type="number" step="any" name="custas_deduzidas"><br>
+    <label>Protesto:</label><input type="checkbox" name="protesto"><br>
+    <label>Protesto Deduzido:</label><input type="number" step="any" name="protesto_deduzido"><br>
+    <label>Honorário:</label><input type="number" step="any" name="honorario"><br>
+    <label>Honorário Repassado:</label><input type="number" step="any" name="honorario_repassado"><br>
+    <label>Alvará:</label><input type="number" step="any" name="alvara"><br>
+    <label>Alvará Recebido:</label><input type="number" step="any" name="alvara_recebido"><br>
+    <label>Valor de Entrada:</label><input type="number" step="any" name="valor_entrada"><br>
+    <label>Vencimento Entrada:</label><input type="date" name="vencimento_entrada"><br>
+    <label>Parcelas:</label><input type="number" name="parcelas"><br>
+    <label>Vencimento Parcelas:</label><input type="date" name="vencimento_parcelas"><br>
+    <label>Parcelas Restantes:</label><input type="number" name="parcelas_restantes"><br>
+    <label>Qtd Boletos Emitidos:</label><input type="number" name="qtd_boletos_emitidos"><br>
+    <label>Valor Pago com Boleto:</label><input type="number" step="any" name="valor_pago_com_boleto"><br>
+    <label>Data Pagamento Boleto:</label><input type="date" name="data_pagamento_boleto"><br>
+    <label>Data da Baixa:</label><input type="date" name="data_baixa"><br>
+    <label>Observações Contabilidade:</label><input type="text" name="obs_contabilidade"><br>
+    <label>Observações Contas a Receber:</label><input type="text" name="obs_contas_receber"><br>
+    <label>Valor Repassado ao Escritório:</label><input type="number" step="any" name="valor_repassado_escritorio"><br>
+    <input type="submit" value="Salvar">
+</form>
 {% endblock %}

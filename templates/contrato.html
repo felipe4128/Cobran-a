@@ -1,14 +1,19 @@
-{% extends "base.html" %}
-{% block title %}Detalhes do Contrato{% endblock %}
+
+{% extends 'base.html' %}
 {% block content %}
-    <form method="post">
-        {% for key, value in contrato.items() %}
-            <div class="mb-2">
-                <label class="form-label">{{ key.replace('_', ' ').capitalize() }}</label>
-                <input name="{{ key }}" value="{{ value or '' }}" class="form-control">
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Atualizar</button>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
-    </form>
+<h2>Detalhes do Contrato</h2>
+<form method="POST">
+    {% for k, v in contrato.items() %}
+        <label>{{ k.replace('_', ' ').capitalize() }}:</label>
+        {% if 'data' in k %}
+            <input type="date" name="{{ k }}" value="{{ v|default('')[:10] }}"><br>
+        {% elif k in ['baixa_acima_48_meses', 'protesto'] %}
+            <input type="checkbox" name="{{ k }}" {% if v %}checked{% endif %}><br>
+        {% else %}
+            <input type="text" name="{{ k }}" value="{{ v|default('') }}"><br>
+        {% endif %}
+    {% endfor %}
+    <input type="submit" value="Salvar">
+</form>
+<a href="{{ url_for('index') }}">Voltar</a>
 {% endblock %}

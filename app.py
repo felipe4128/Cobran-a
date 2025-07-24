@@ -24,6 +24,7 @@ db = SQLAlchemy(app)
 
 class Contrato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    data_contrato = db.Column(db.Date)
     cliente = db.Column(db.String(100))
     numero = db.Column(db.String(50))
     tipo_contrato = db.Column(db.String(50))
@@ -52,7 +53,6 @@ class Contrato(db.Model):
     obs_contabilidade = db.Column(db.Text)
     obs_contas_receber = db.Column(db.Text)
     valor_repassado_escritorio = db.Column(db.Float)
-    data_contrato = db.Column(db.Date)
 
 @app.before_request
 def criar_tabelas():
@@ -75,6 +75,7 @@ def novo():
             vencimento_parcelas = datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else (data_contrato + timedelta(days=30) if data_contrato else None)
 
             contrato = Contrato(
+                data_contrato=data_contrato,
                 cliente=request.form.get('cliente') or None,
                 numero=request.form.get('numero') or None,
                 tipo_contrato=request.form.get('tipo_contrato') or None,
@@ -102,8 +103,7 @@ def novo():
                 data_baixa=datetime.strptime(request.form.get('data_baixa'), '%Y-%m-%d') if request.form.get('data_baixa') else None,
                 obs_contabilidade=request.form.get('obs_contabilidade') or None,
                 obs_contas_receber=request.form.get('obs_contas_receber') or None,
-                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio')) if request.form.get('valor_repassado_escritorio') else None,
-                data_contrato=data_contrato
+                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio')) if request.form.get('valor_repassado_escritorio') else None
             )
             db.session.add(contrato)
             db.session.commit()
@@ -136,6 +136,17 @@ def ver_contrato(id):
     contrato_dict = contrato.__dict__.copy()
     contrato_dict.pop('_sa_instance_state', None)
     return render_template('contrato.html', contrato=contrato_dict)
+
+@app.route('/deletar', methods=['POST'])
+def deletar():
+    ids = request.form.getlist('ids')
+    if ids:
+        for id_str in ids:
+            contrato = Contrato.query.get(int(id_str))
+            if contrato:
+                db.session.delete(contrato)
+        db.session.commit()
+    return redirect(url_for('index'))
 
 @app.route('/exportar')
 def exportar():
