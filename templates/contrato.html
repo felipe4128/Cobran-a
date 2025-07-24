@@ -1,33 +1,18 @@
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalhes do Contrato</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #003641; }
-        h1 { color: #00AE9D; }
-        form { background: white; padding: 20px; border-radius: 8px; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
-        button { margin-top: 20px; background-color: #00AE9D; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #007f75; }
-    </style>
-</head>
-<body>
-    <h1>Detalhes do Contrato</h1>
-    <form method="POST">
-        {% for field in contrato.__table__.columns %}
-            <label for="{{ field.name }}">{{ field.name.replace('_', ' ').capitalize() }}</label>
-            <input 
-                type="text" 
-                id="{{ field.name }}" 
-                name="{{ field.name }}" 
-                value="{{ getattr(contrato, field.name) or '' }}"
-            >
-        {% endfor %}
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="{{ url_for('index') }}">Voltar</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="container mt-4">
+  <h2 class="mb-3 text-primary">Detalhes do Contrato</h2>
+  <form method="POST">
+    {% for key, value in contrato.items() %}
+      {% if key != "id" %}
+        <div class="mb-2">
+          <label class="form-label">{{ key.replace('_', ' ').capitalize() }}</label>
+          <input type="text" class="form-control" name="{{ key }}" value="{{ value or '' }}">
+        </div>
+      {% endif %}
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Salvar Alterações</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+  </form>
+</div>
+{% endblock %}

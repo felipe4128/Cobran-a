@@ -1,42 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Novo Contrato</title>
-  <style>
-    body { font-family: Arial; margin: 20px; background: #f5f5f5; }
-    form div { margin-bottom: 10px; }
-    label { font-weight: bold; display: block; }
-    input, textarea { width: 100%; padding: 6px; }
-    button { padding: 10px 20px; background: #00AE9D; color: white; border: none; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <h1>Novo Contrato</h1>
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="container mt-4">
+  <h2 class="mb-3 text-primary">Novo Contrato</h2>
   <form method="POST">
-    {% for field in ['cliente', 'numero', 'tipo_contrato', 'garantia', 'valor', 'valor_abatido', 'ganho', 'custas', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada', 'parcelas', 'parcelas_restantes', 'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'valor_repassado_escritorio'] %}
-      <div>
-        <label>{{ field.replace('_',' ').title() }}</label>
-        <input type="text" name="{{ field }}">
-      </div>
-    {% endfor %}
-    {% for field in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa'] %}
-      <div>
-        <label>{{ field.replace('_',' ').title() }}</label>
-        <input type="date" name="{{ field }}">
-      </div>
-    {% endfor %}
-    <div><label>Baixa acima de 48 meses <input type="checkbox" name="baixa_acima_48_meses"></label></div>
-    <div><label>Protesto <input type="checkbox" name="protesto"></label></div>
-    <div>
-      <label>Observações Contabilidade</label>
-      <textarea name="obs_contabilidade"></textarea>
-    </div>
-    <div>
-      <label>Observações Contas a Receber</label>
-      <textarea name="obs_contas_receber"></textarea>
-    </div>
-    <button type="submit">Salvar</button>
+    {% include "form_campos.html" %}
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
   </form>
-</body>
-</html>
+</div>
+{% endblock %}
