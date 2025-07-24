@@ -1,11 +1,41 @@
-{% extends "base.html" %}
-{% block conteudo %}
-<div class="container mt-4">
-  <h2 class="mb-3 text-primary">Novo Contrato</h2>
-  <form method="POST">
-    {% include "form_campos.html" %}
-    <button type="submit" class="btn btn-success">Salvar</button>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
-  </form>
-</div>
-{% endblock %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Contrato</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background-color: #f2f2f2; }
+        form { background: white; padding: 20px; border-radius: 8px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { background: {{ cor_primaria }}; color: white; border: none; padding: 10px 15px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Novo Contrato</h1>
+    <form method="post">
+        {% for campo in [
+            'cliente', 'numero', 'tipo_contrato', 'garantia', 'valor', 'valor_abatido', 'ganho',
+            'custas', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado',
+            'alvara', 'alvara_recebido', 'valor_entrada', 'parcelas', 'parcelas_restantes',
+            'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'valor_repassado_escritorio'
+        ] %}
+            <label>{{ campo.replace('_', ' ').capitalize() }}:</label>
+            <input type="text" name="{{ campo }}">
+        {% endfor %}
+        {% for campo in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa'] %}
+            <label>{{ campo.replace('_', ' ').capitalize() }}:</label>
+            <input type="date" name="{{ campo }}">
+        {% endfor %}
+        {% for campo in ['baixa_acima_48_meses', 'protesto'] %}
+            <label><input type="checkbox" name="{{ campo }}"> {{ campo.replace('_', ' ').capitalize() }}</label>
+        {% endfor %}
+        <label>Obs Contabilidade:</label>
+        <textarea name="obs_contabilidade"></textarea>
+        <label>Obs Contas a Receber:</label>
+        <textarea name="obs_contas_receber"></textarea>
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>

@@ -1,18 +1,33 @@
-{% extends "base.html" %}
-{% block conteudo %}
-<div class="container mt-4">
-  <h2 class="mb-3 text-primary">Detalhes do Contrato</h2>
-  <form method="POST">
-    {% for key, value in contrato.items() %}
-      {% if key != "id" %}
-        <div class="mb-2">
-          <label class="form-label">{{ key.replace('_', ' ').capitalize() }}</label>
-          <input type="text" class="form-control" name="{{ key }}" value="{{ value or '' }}">
-        </div>
-      {% endif %}
-    {% endfor %}
-    <button type="submit" class="btn btn-success">Salvar Alterações</button>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
-  </form>
-</div>
-{% endblock %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrato</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background-color: #f2f2f2; }
+        form { background: white; padding: 20px; border-radius: 8px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { background: {{ cor_secundaria }}; color: black; border: none; padding: 10px 15px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Detalhes do Contrato</h1>
+    <form method="post">
+        {% for key, value in contrato.items() %}
+            {% if 'data' in key or 'vencimento' in key %}
+                <label>{{ key.replace('_', ' ').capitalize() }}</label>
+                <input type="date" name="{{ key }}" value="{{ value.strftime('%Y-%m-%d') if value else '' }}">
+            {% elif key.startswith('obs') %}
+                <label>{{ key.replace('_', ' ').capitalize() }}</label>
+                <textarea name="{{ key }}">{{ value or '' }}</textarea>
+            {% else %}
+                <label>{{ key.replace('_', ' ').capitalize() }}</label>
+                <input type="text" name="{{ key }}" value="{{ value or '' }}">
+            {% endif %}
+        {% endfor %}
+        <button type="submit">Atualizar</button>
+    </form>
+</body>
+</html>

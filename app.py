@@ -13,23 +13,28 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'credito.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Adicionando cores do Sicoob ao contexto global dos templates
+@app.context_processor
+def inject_colors():
+    return dict(
+        cor_primaria="#00AE9D",
+        cor_escura="#003641",
+        cor_secundaria="#C9D200"
+    )
+
 db = SQLAlchemy(app)
 
 class Contrato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    numero = db.Column(db.String(50), nullable=False)
-    cliente = db.Column(db.String(100), nullable=False)
-    data = db.Column(db.Date, nullable=False)
-    valor = db.Column(db.Float, nullable=False)
-    custas = db.Column(db.Float, nullable=False)
-    juros = db.Column(db.Float, nullable=False)
-    prazo = db.Column(db.Integer, nullable=False)
-    forma_pagamento = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(20), default='Ativo')
+    cliente = db.Column(db.String(100))
+    numero = db.Column(db.String(50))
     tipo_contrato = db.Column(db.String(50))
+    garantia = db.Column(db.String(100))
+    valor = db.Column(db.Float)
     baixa_acima_48_meses = db.Column(db.Boolean, default=False)
     valor_abatido = db.Column(db.Float)
     ganho = db.Column(db.Float)
+    custas = db.Column(db.Float)
     custas_deduzidas = db.Column(db.Float)
     protesto = db.Column(db.Boolean, default=False)
     protesto_deduzido = db.Column(db.Float)
@@ -39,7 +44,9 @@ class Contrato(db.Model):
     alvara_recebido = db.Column(db.Float)
     valor_entrada = db.Column(db.Float)
     vencimento_entrada = db.Column(db.Date)
+    parcelas = db.Column(db.Integer)
     parcelas_restantes = db.Column(db.Integer)
+    vencimento_parcelas = db.Column(db.Date)
     qtd_boletos_emitidos = db.Column(db.Integer)
     valor_pago_com_boleto = db.Column(db.Float)
     data_pagamento_boleto = db.Column(db.Date)
@@ -47,26 +54,6 @@ class Contrato(db.Model):
     obs_contabilidade = db.Column(db.Text)
     obs_contas_receber = db.Column(db.Text)
     valor_repassado_escritorio = db.Column(db.Float)
-
-    parcelas = db.relationship('Parcela', backref='contrato', lazy=True)
-    garantias = db.relationship('Garantia', backref='contrato', lazy=True)
-
-class Parcela(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    contrato_id = db.Column(db.Integer, db.ForeignKey('contrato.id'), nullable=False)
-    numero = db.Column(db.Integer, nullable=False)
-    vencimento = db.Column(db.Date, nullable=False)
-    valor = db.Column(db.Float, nullable=False)
-    pago = db.Column(db.Boolean, default=False)
-
-class Garantia(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    contrato_id = db.Column(db.Integer, db.ForeignKey('contrato.id'), nullable=False)
-    tipo = db.Column(db.String(50), nullable=False)
-    descricao = db.Column(db.String(200))
-    valor = db.Column(db.Float)
-    data_avaliacao = db.Column(db.Date)
-    status = db.Column(db.String(20), default='Ativa')
 
 @app.before_request
 def criar_tabelas():
@@ -80,49 +67,68 @@ def index():
 @app.route('/novo', methods=['GET', 'POST'])
 def novo():
     if request.method == 'POST':
-        contrato = Contrato(
-            numero=request.form['numero'],
-            cliente=request.form['cliente'],
-            data=datetime.strptime(request.form['data'], '%Y-%m-%d'),
-            valor=float(request.form['valor']),
-            custas=float(request.form['custas']),
-            juros=float(request.form['juros']),
-            prazo=int(request.form['prazo']),
-            forma_pagamento=request.form['forma_pagamento'],
-            tipo_contrato=request.form.get('tipo_contrato'),
-            obs_contabilidade=request.form.get('obs_contabilidade')
-        )
-        db.session.add(contrato)
-        db.session.commit()
-
-        valor = contrato.valor
-        i = contrato.juros
-        n = contrato.prazo
-        pmt = (valor * i) / (1 - pow(1 + i, -n)) if i > 0 else valor / n
-        for m in range(1, n+1):
-            vencimento = contrato.data + timedelta(days=30*m)
-            parcela = Parcela(
-                contrato_id=contrato.id,
-                numero=m,
-                vencimento=vencimento,
-                valor=round(pmt, 2)
+        try:
+            contrato = Contrato(
+                cliente=request.form.get('cliente') or None,
+                numero=request.form.get('numero') or None,
+                tipo_contrato=request.form.get('tipo_contrato') or None,
+                garantia=request.form.get('garantia') or None,
+                valor=float(request.form.get('valor') or 0),
+                baixa_acima_48_meses=bool(request.form.get('baixa_acima_48_meses')),
+                valor_abatido=float(request.form.get('valor_abatido') or 0),
+                ganho=float(request.form.get('ganho') or 0),
+                custas=float(request.form.get('custas') or 0),
+                custas_deduzidas=float(request.form.get('custas_deduzidas') or 0),
+                protesto=bool(request.form.get('protesto')),
+                protesto_deduzido=float(request.form.get('protesto_deduzido') or 0),
+                honorario=float(request.form.get('honorario') or 0),
+                honorario_repassado=float(request.form.get('honorario_repassado') or 0),
+                alvara=float(request.form.get('alvara') or 0),
+                alvara_recebido=float(request.form.get('alvara_recebido') or 0),
+                valor_entrada=float(request.form.get('valor_entrada') or 0),
+                vencimento_entrada=datetime.strptime(request.form.get('vencimento_entrada'), '%Y-%m-%d') if request.form.get('vencimento_entrada') else None,
+                parcelas=int(request.form.get('parcelas') or 0),
+                parcelas_restantes=int(request.form.get('parcelas_restantes') or 0),
+                vencimento_parcelas=datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else None,
+                qtd_boletos_emitidos=int(request.form.get('qtd_boletos_emitidos') or 0),
+                valor_pago_com_boleto=float(request.form.get('valor_pago_com_boleto') or 0),
+                data_pagamento_boleto=datetime.strptime(request.form.get('data_pagamento_boleto'), '%Y-%m-%d') if request.form.get('data_pagamento_boleto') else None,
+                data_baixa=datetime.strptime(request.form.get('data_baixa'), '%Y-%m-%d') if request.form.get('data_baixa') else None,
+                obs_contabilidade=request.form.get('obs_contabilidade') or None,
+                obs_contas_receber=request.form.get('obs_contas_receber') or None,
+                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio') or 0)
             )
-            db.session.add(parcela)
-        db.session.commit()
-        return redirect(url_for('index'))
+            db.session.add(contrato)
+            db.session.commit()
+            return redirect(url_for('index'))
+        except Exception as e:
+            return f"Erro ao salvar contrato: {e}", 400
+
     return render_template('novo.html')
 
 @app.route('/contrato/<int:id>', methods=['GET', 'POST'])
 def ver_contrato(id):
     contrato = Contrato.query.get_or_404(id)
     if request.method == 'POST':
-        contrato.cliente = request.form['cliente']
-        contrato.status = request.form['status']
-        contrato.tipo_contrato = request.form.get('tipo_contrato')
-        contrato.obs_contabilidade = request.form.get('obs_contabilidade')
+        for field in request.form:
+            if hasattr(Contrato, field):
+                value = request.form.get(field)
+                if value == '':
+                    setattr(contrato, field, None)
+                elif field in ['valor', 'valor_abatido', 'ganho', 'custas', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada', 'valor_pago_com_boleto', 'valor_repassado_escritorio']:
+                    setattr(contrato, field, float(value))
+                elif field in ['parcelas', 'parcelas_restantes', 'qtd_boletos_emitidos']:
+                    setattr(contrato, field, int(value))
+                elif field in ['vencimento_entrada', 'vencimento_parcelas', 'data_pagamento_boleto', 'data_baixa']:
+                    setattr(contrato, field, datetime.strptime(value, '%Y-%m-%d'))
+                else:
+                    setattr(contrato, field, value)
         db.session.commit()
         return redirect(url_for('ver_contrato', id=id))
-    return render_template('contrato.html', contrato=contrato)
+
+    contrato_dict = contrato.__dict__.copy()
+    contrato_dict.pop('_sa_instance_state', None)
+    return render_template('contrato.html', contrato=contrato_dict)
 
 @app.route('/exportar')
 def exportar():
@@ -134,13 +140,6 @@ def exportar():
     export_path = os.path.join(base_dir, 'contratos_exportados.xlsx')
     df.to_excel(export_path, index=False)
     return send_file(export_path, as_attachment=True)
-
-@app.route('/parcela/pagar/<int:id>')
-def pagar_parcela(id):
-    parcela = Parcela.query.get_or_404(id)
-    parcela.pago = True
-    db.session.commit()
-    return redirect(url_for('ver_contrato', id=parcela.contrato_id))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
