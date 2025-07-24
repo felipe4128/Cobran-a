@@ -3,41 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Contratos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #F8F9FA; }
-        .btn-sicoob { background-color: #00AE9D; color: white; }
-        .btn-sicoob:hover { background-color: #003641; }
+        body { font-family: Arial; background-color: #f5f5f5; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #003641; color: white; }
+        a.botao { background-color: #00AE9D; padding: 10px; text-decoration: none; color: white; border-radius: 5px; margin-right: 10px; }
+        .botoes { margin-bottom: 20px; }
     </style>
 </head>
-<body class="container mt-4">
-    <h1 class="mb-4 text-center text-dark">Lista de Contratos</h1>
-    <div class="mb-3 d-flex justify-content-between">
-        <a href="/novo" class="btn btn-sicoob">Novo Contrato</a>
-        <a href="/exportar" class="btn btn-outline-success">Exportar para Excel</a>
+<body>
+    <div class="botoes">
+        <a href="/novo" class="botao">Novo Contrato</a>
+        <a href="/exportar" class="botao">Exportar Excel</a>
     </div>
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="table-dark">
+    <table>
+        <thead>
             <tr>
-                <th>ID</th>
-                <th>Número</th>
                 <th>Cliente</th>
-                <th>Data</th>
+                <th>Nº Contrato</th>
+                <th>Tipo</th>
+                <th>Garantia</th>
                 <th>Valor</th>
-                <th>Status</th>
-                <th>Ações</th>
+                <th>Ganho</th>
+                <th>Baixa</th>
+                <th>Ver</th>
             </tr>
         </thead>
         <tbody>
-            {% for contrato in contratos %}
+            {% for c in contratos %}
             <tr>
-                <td>{{ contrato.id }}</td>
-                <td>{{ contrato.numero }}</td>
-                <td>{{ contrato.cliente }}</td>
-                <td>{{ contrato.data.strftime('%d/%m/%Y') }}</td>
-                <td>R$ {{ '%.2f'|format(contrato.valor) }}</td>
-                <td>{{ contrato.status }}</td>
-                <td><a href="{{ url_for('ver_contrato', id=contrato.id) }}" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                <td>{{ c.cliente }}</td>
+                <td>{{ c.numero }}</td>
+                <td>{{ c.tipo_contrato }}</td>
+                <td>{{ c.garantia }}</td>
+                <td>{{ c.valor }}</td>
+                <td>{{ c.ganho }}</td>
+                <td>{{ c.data_baixa }}</td>
+                <td><a href="/contrato/{{ c.id }}">Detalhes</a></td>
             </tr>
             {% endfor %}
         </tbody>

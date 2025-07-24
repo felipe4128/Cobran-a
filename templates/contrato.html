@@ -1,106 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Contrato</title>
+    <title>Detalhes do Contrato</title>
     <style>
-        body {
-            background-color: {{ cor_escura }};
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            background-color: white;
-            color: black;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        h1 {
-            color: {{ cor_primaria }};
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        input, select, textarea {
-            width: 100%%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-        button {
-            background-color: {{ cor_primaria }};
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-        }
-        table {
-            width: 100%%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            color: black;
-        }
-        th {
-            background-color: {{ cor_secundaria }};
-        }
-        .pago {
-            color: green;
-            font-weight: bold;
-        }
-        .nao-pago {
-            color: red;
-            font-weight: bold;
-        }
+        body { font-family: Arial; background-color: #f5f5f5; margin: 20px; }
+        form { display: flex; flex-wrap: wrap; gap: 10px; }
+        label { width: 100%; font-weight: bold; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; }
+        button { background-color: #003641; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Detalhes do Contrato</h1>
-        <form method="post">
-            <label>Cliente: <input type="text" name="cliente" value="{{ contrato.cliente }}"></label>
-            <label>Status: 
-                <select name="status">
-                    <option value="Ativo" {% if contrato.status == 'Ativo' %}selected{% endif %}>Ativo</option>
-                    <option value="Inativo" {% if contrato.status == 'Inativo' %}selected{% endif %}>Inativo</option>
-                </select>
-            </label>
-            <label>Tipo de Contrato: <input type="text" name="tipo_contrato" value="{{ contrato.tipo_contrato }}"></label>
-            <label>Observações Contabilidade: <textarea name="obs_contabilidade">{{ contrato.obs_contabilidade }}</textarea></label>
-            <button type="submit">Salvar Alterações</button>
-        </form>
-
-        <h2>Parcelas</h2>
-        <table>
-            <tr>
-                <th>Nº</th>
-                <th>Vencimento</th>
-                <th>Valor</th>
-                <th>Status</th>
-                <th>Ação</th>
-            </tr>
-            {% for p in contrato.parcelas %}
-            <tr>
-                <td>{{ p.numero }}</td>
-                <td>{{ p.vencimento.strftime('%d/%m/%Y') }}</td>
-                <td>R$ {{ p.valor }}</td>
-                <td class="{{ 'pago' if p.pago else 'nao-pago' }}">{{ 'Pago' if p.pago else 'Em aberto' }}</td>
-                <td>
-                    {% if not p.pago %}
-                    <a href="{{ url_for('pagar_parcela', id=p.id) }}">Marcar como paga</a>
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+    <h1>Contrato {{ contrato.numero }}</h1>
+    <form method="POST">
+        {% for column in contrato.__table__.columns %}
+            <label>{{ column.name }}</label>
+            <input name="{{ column.name }}" value="{{ getattr(contrato, column.name) or '' }}">
+        {% endfor %}
+        <button type="submit">Salvar Alterações</button>
+    </form>
 </body>
 </html>

@@ -3,48 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Novo Contrato</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #F8F9FA; }
-        .btn-sicoob { background-color: #00AE9D; color: white; }
-        .btn-sicoob:hover { background-color: #003641; }
+        body { font-family: Arial; background-color: #f5f5f5; margin: 20px; }
+        form { display: flex; flex-wrap: wrap; gap: 10px; }
+        label { width: 100%; font-weight: bold; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; }
+        button { background-color: #00AE9D; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; }
     </style>
 </head>
-<body class="container mt-4">
-    <h1 class="text-center mb-4">Cadastrar Novo Contrato</h1>
-    <form method="POST" class="row g-3">
-        {% for campo in ['numero', 'cliente', 'data', 'valor', 'custas', 'juros', 'prazo', 'forma_pagamento', 'status', 'tipo_contrato', 'valor_abatido', 'ganho', 'custas_deduzidas', 'protesto_deduzido', 'honorario', 'honorario_repassado', 'alvara', 'alvara_recebido', 'valor_entrada', 'parcelas_restantes', 'qtd_boletos_emitidos', 'valor_pago_com_boleto', 'valor_repassado_escritorio'] %}
-        <div class="col-md-4">
-            <label class="form-label">{{ campo.replace('_', ' ').title() }}</label>
-            <input type="text" name="{{ campo }}" class="form-control">
-        </div>
+<body>
+    <h1>Novo Contrato</h1>
+    <form method="POST">
+        {% for field in contrato_fields %}
+            <label>{{ field }}</label>
+            <input type="text" name="{{ field }}">
         {% endfor %}
-        {% for campo in ['vencimento_entrada', 'data_pagamento_boleto', 'data_baixa'] %}
-        <div class="col-md-4">
-            <label class="form-label">{{ campo.replace('_', ' ').title() }}</label>
-            <input type="date" name="{{ campo }}" class="form-control">
-        </div>
-        {% endfor %}
-        <div class="col-12">
-            <label class="form-label">Observações para Contabilidade</label>
-            <textarea name="obs_contabilidade" class="form-control"></textarea>
-        </div>
-        <div class="col-12">
-            <label class="form-label">Observações do Contas a Receber</label>
-            <textarea name="obs_contas_receber" class="form-control"></textarea>
-        </div>
-        <div class="col-12 form-check">
-            <input type="checkbox" name="baixa_acima_48_meses" class="form-check-input">
-            <label class="form-check-label">Baixa acima de 48 meses</label>
-        </div>
-        <div class="col-12 form-check">
-            <input type="checkbox" name="protesto" class="form-check-input">
-            <label class="form-check-label">Protesto</label>
-        </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-sicoob">Salvar Contrato</button>
-            <a href="/" class="btn btn-secondary">Cancelar</a>
-        </div>
+        <button type="submit">Salvar</button>
     </form>
 </body>
 </html>
