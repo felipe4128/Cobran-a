@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcelas do Contrato {{ contrato.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #003641; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 8px; text-align: center; }
+        button { padding: 6px 10px; cursor: pointer; background: #00AE9D; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #00796B; }
+        a { text-decoration: none; color: #003641; }
+    </style>
+</head>
+<body>
+    <h1>Parcelas - Contrato {{ contrato.numero }} ({{ contrato.cliente }})</h1>
+    <table>
+        <thead><tr><th>Nº</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ação</th></tr></thead>
+        <tbody>
+            {% for parcela in parcelas %}
+            <tr>
+                <td>{{ parcela.numero }}</td>
+                <td>R$ {{ '%.2f'|format(parcela.valor) }}</td>
+                <td>{{ parcela.vencimento.strftime('%d/%m/%Y') }}</td>
+                <td>{{ 'Quitada' if parcela.quitada else 'Em aberto' }}</td>
+                <td>
+                    {% if not parcela.quitada %}
+                    <form method="POST" action="/parcela/{{ parcela.id }}/quitar">
+                        <button type="submit">Quitar</button>
+                    </form>
+                    {% else %}✅{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br><a href="/contrato/{{ contrato.id }}">⬅ Voltar ao Contrato</a>
+</body>
+</html>
