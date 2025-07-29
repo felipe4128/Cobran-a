@@ -1,13 +1,49 @@
-{% extends 'base.html' %}
-{% block title %}Contrato Detalhado{% endblock %}
-{% block content %}
-<form method="POST">
-    {% for field, value in contrato.items() %}
-        <label>{{ field }}:
-            <input type="{{ 'date' if 'data' in field or 'vencimento' in field else 'text' }}"
-                   name="{{ field }}" value="{{ value if value is not none else '' }}">
-        </label><br>
-    {% endfor %}
-    <button type="submit">Salvar</button>
-</form>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrato</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+        h1 { color: #003641; }
+        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        button { margin-top: 15px; padding: 10px; background: #00AE9D; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #007f73; }
+        .parcelas { margin-top: 30px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #00AE9D; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Contrato - {{ contrato.cliente }}</h1>
+    <form method="POST">
+        {% for campo, valor in contrato.items() %}
+            <label>{{ campo }}:</label>
+            <input type="text" name="{{ campo }}" value="{{ valor if valor is not none else '' }}">
+        {% endfor %}
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <div id="parcelas" class="parcelas">
+        <h2>Parcelas</h2>
+        <table>
+            <tr><th>Nº</th><th>Data Vencimento</th><th>Status</th><th>Ação</th></tr>
+            {% if contrato.parcelas %}
+                {% for i in range(1, contrato.parcelas+1) %}
+                    <tr>
+                        <td>{{ i }}</td>
+                        <td>{{ (contrato.vencimento_parcelas + timedelta(days=30*(i-1))).strftime('%d/%m/%Y') if contrato.vencimento_parcelas else '' }}</td>
+                        <td>{% if i <= (contrato.parcelas - (contrato.parcelas_restantes or contrato.parcelas)) %}Pago{% else %}Em aberto{% endif %}</td>
+                        <td><button class="btn">Dar Baixa</button></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="4">Sem parcelas registradas</td></tr>
+            {% endif %}
+        </table>
+    </div>
+</body>
+</html>

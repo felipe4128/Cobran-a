@@ -1,9 +1,24 @@
-{% extends 'base.html' %}
-{% block title %}Lista de Contratos{% endblock %}
-{% block content %}
-<form method="POST" action="/deletar">
-    <table>
-        <thead>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Contratos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+        h1 { color: #003641; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #00AE9D; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .btn { padding: 8px 12px; text-decoration: none; background: #00AE9D; color: white; border-radius: 5px; }
+        .btn:hover { background: #007f73; }
+        .footer { margin-top: 20px; padding: 10px; background: #003641; color: white; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Contratos</h1>
+    <form method="POST" action="{{ url_for('deletar') }}">
+        <table>
             <tr>
                 <th>Selecionar</th>
                 <th>ID</th>
@@ -15,24 +30,26 @@
                 <th>Ações</th>
                 <th>Parcelas</th>
             </tr>
-        </thead>
-        <tbody>
-            {% for c in contratos %}
+            {% for contrato in contratos %}
             <tr>
-                <td><input type="checkbox" name="ids" value="{{ c.id }}"></td>
-                <td>{{ c.id }}</td>
-                <td>{{ c.cliente }}</td>
-                <td>{{ c.numero }}</td>
-                <td>{{ c.tipo_contrato }}</td>
-                <td>{{ c.garantia }}</td>
-                <td>{{ c.valor }}</td>
-                <td><a href="{{ url_for('ver_contrato', id=c.id) }}">Ver</a></td>
-                <td>{{ c.parcelas_restantes }}</td>
+                <td><input type="checkbox" name="ids" value="{{ contrato.id }}"></td>
+                <td>{{ contrato.id }}</td>
+                <td>{{ contrato.cliente }}</td>
+                <td>{{ contrato.numero }}</td>
+                <td>{{ contrato.tipo_contrato }}</td>
+                <td>{{ contrato.garantia }}</td>
+                <td>{{ contrato.valor }}</td>
+                <td><a href="{{ url_for('ver_contrato', id=contrato.id) }}" class="btn">Ver</a></td>
+                <td><a href="{{ url_for('ver_contrato', id=contrato.id) }}#parcelas" class="btn">Parcelas</a></td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <button type="submit">Excluir Selecionados</button>
-</form>
-<p><a class="btn" href="{{ url_for('novo') }}">Novo Contrato</a> | <a class="btn" href="{{ url_for('exportar') }}">Exportar Excel</a></p>
-{% endblock %}
+        </table>
+        <button type="submit" class="btn">Excluir Selecionados</button>
+    </form>
+    <br>
+    <a href="{{ url_for('novo') }}" class="btn">Novo Contrato</a>
+    <a href="{{ url_for('exportar') }}" class="btn">Exportar Excel</a>
+
+    <div class="footer">Sistema desenvolvido com Flask</div>
+</body>
+</html>

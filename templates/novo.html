@@ -1,14 +1,46 @@
-{% extends 'base.html' %}
-{% block title %}Novo Contrato{% endblock %}
-{% block content %}
-<form method="POST">
-    <label>Data Contrato: <input type="date" name="data_contrato"></label><br>
-    <label>Cliente: <input type="text" name="cliente"></label><br>
-    <label>Número: <input type="text" name="numero"></label><br>
-    <label>Tipo Contrato: <input type="text" name="tipo_contrato"></label><br>
-    <label>Garantia: <input type="text" name="garantia"></label><br>
-    <label>Valor: <input type="number" step="0.01" name="valor"></label><br>
-    <label>Parcelas: <input type="number" name="parcelas"></label><br>
-    <button type="submit">Salvar</button>
-</form>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Contrato</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+        h1 { color: #003641; }
+        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        button { margin-top: 15px; padding: 10px; background: #00AE9D; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #007f73; }
+    </style>
+</head>
+<body>
+    <h1>Novo Contrato</h1>
+    <form method="POST">
+        <label>Cliente:</label>
+        <input type="text" name="cliente" required>
+
+        <label>Número do Contrato:</label>
+        <input type="text" name="numero">
+
+        <label>Tipo:</label>
+        <input type="text" name="tipo_contrato">
+
+        <label>Garantia:</label>
+        <input type="text" name="garantia">
+
+        <label>Valor:</label>
+        <input type="number" step="0.01" name="valor">
+
+        <label>Data do Contrato:</label>
+        <input type="date" name="data_contrato">
+
+        <label>Parcelas:</label>
+        <input type="number" name="parcelas">
+
+        <label>Vencimento da 1ª Parcela:</label>
+        <input type="date" name="vencimento_parcelas">
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>
