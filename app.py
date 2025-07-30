@@ -22,38 +22,40 @@ def inject_colors():
 
 db = SQLAlchemy(app)
 
-# Modelo com todos os campos do layout novo
+# Modelo atualizado com todos os campos e nullable=True
 class Contrato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cooperado = db.Column(db.String(100))
-    contrato = db.Column(db.String(50))
-    tipo = db.Column(db.String(50))
-    garantia = db.Column(db.String(100))
-    valor_contrato_sistema = db.Column(db.Float)
-    baixa_48_meses = db.Column(db.String(10))
-    valor_abatido = db.Column(db.Float)
-    ganho = db.Column(db.Float)
-    custas = db.Column(db.Float)
-    custas_deduzidas = db.Column(db.Float)
-    protesto = db.Column(db.Float)
-    protesto_deduzido = db.Column(db.Float)
-    honorario = db.Column(db.Float)
-    honorario_repassado = db.Column(db.Float)
-    alvara = db.Column(db.Float)
-    alvara_recebido = db.Column(db.Float)
-    valor_entrada = db.Column(db.Float)
-    vencimento_entrada = db.Column(db.Date)
-    valor_parcelas = db.Column(db.Float)
-    parcelas = db.Column(db.Integer)
-    parcelas_restantes = db.Column(db.Integer)
-    vencimento_parcelas = db.Column(db.Date)
-    qtd_boletos_emitidos = db.Column(db.Integer)
-    valor_pg_boleto = db.Column(db.Float)
-    data_pg_boleto = db.Column(db.Date)
-    data_baixa = db.Column(db.Date)
-    obs_contabilidade = db.Column(db.Text)
-    obs_contas_receber = db.Column(db.Text)
-    valor_repassado_escritorio = db.Column(db.Float)
+    data_contrato = db.Column(db.Date, nullable=True)
+    cliente = db.Column(db.String(100), nullable=True)
+    numero = db.Column(db.String(50), nullable=True)
+    tipo_contrato = db.Column(db.String(50), nullable=True)
+    garantia = db.Column(db.String(100), nullable=True)
+    valor = db.Column(db.Float, nullable=True)
+    parcelas = db.Column(db.Integer, nullable=True)
+    parcelas_restantes = db.Column(db.Integer, nullable=True)
+    vencimento_parcelas = db.Column(db.Date, nullable=True)
+
+    baixa_48_meses = db.Column(db.Float, nullable=True)
+    valor_abatido = db.Column(db.Float, nullable=True)
+    ganho = db.Column(db.Float, nullable=True)
+    custas = db.Column(db.Float, nullable=True)
+    custas_deduzidas = db.Column(db.Float, nullable=True)
+    protesto = db.Column(db.Float, nullable=True)
+    protesto_deduzido = db.Column(db.Float, nullable=True)
+    honorario = db.Column(db.Float, nullable=True)
+    honorario_repassado = db.Column(db.Float, nullable=True)
+    alvara = db.Column(db.Float, nullable=True)
+    alvara_recebido = db.Column(db.Float, nullable=True)
+    valor_entrada = db.Column(db.Float, nullable=True)
+    vencimento_entrada = db.Column(db.Date, nullable=True)
+    valor_parcelas = db.Column(db.Float, nullable=True)
+    qtd_boletos = db.Column(db.Integer, nullable=True)
+    valor_pg_boleto = db.Column(db.Float, nullable=True)
+    data_pg_boleto = db.Column(db.Date, nullable=True)
+    data_baixa = db.Column(db.Date, nullable=True)
+    obs_contabilidade = db.Column(db.Text, nullable=True)
+    obs_contas_receber = db.Column(db.Text, nullable=True)
+    valor_repassado_escritorio = db.Column(db.Float, nullable=True)
 
 class Parcela(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,42 +75,68 @@ def index():
     return render_template('index.html', contratos=contratos)
 
 @app.route('/novo', methods=['GET', 'POST'])
-def novo():
+def novo_contrato():
     if request.method == 'POST':
         try:
+            data_contrato = request.form.get('data_contrato')
+            data_contrato = datetime.strptime(data_contrato, '%Y-%m-%d') if data_contrato else None
+
+            parcelas = int(request.form.get('parcelas')) if request.form.get('parcelas') else None
+            valor = float(request.form.get('valor')) if request.form.get('valor') else None
+
+            vencimento_parcelas = request.form.get('vencimento_parcelas')
+            vencimento_parcelas = datetime.strptime(vencimento_parcelas, '%Y-%m-%d') if vencimento_parcelas else None
+
             contrato = Contrato(
-                cooperado=request.form.get('cooperado'),
-                contrato=request.form.get('contrato'),
-                tipo=request.form.get('tipo'),
-                garantia=request.form.get('garantia'),
-                valor_contrato_sistema=float(request.form.get('valor_contrato_sistema') or 0),
-                baixa_48_meses=request.form.get('baixa_48_meses'),
-                valor_abatido=float(request.form.get('valor_abatido') or 0),
-                ganho=float(request.form.get('ganho') or 0),
-                custas=float(request.form.get('custas') or 0),
-                custas_deduzidas=float(request.form.get('custas_deduzidas') or 0),
-                protesto=float(request.form.get('protesto') or 0),
-                protesto_deduzido=float(request.form.get('protesto_deduzido') or 0),
-                honorario=float(request.form.get('honorario') or 0),
-                honorario_repassado=float(request.form.get('honorario_repassado') or 0),
-                alvara=float(request.form.get('alvara') or 0),
-                alvara_recebido=float(request.form.get('alvara_recebido') or 0),
-                valor_entrada=float(request.form.get('valor_entrada') or 0),
+                data_contrato=data_contrato,
+                cliente=request.form.get('cliente') or None,
+                numero=request.form.get('numero') or None,
+                tipo_contrato=request.form.get('tipo_contrato') or None,
+                garantia=request.form.get('garantia') or None,
+                valor=valor,
+                parcelas=parcelas,
+                parcelas_restantes=parcelas,
+                vencimento_parcelas=vencimento_parcelas,
+                baixa_48_meses=request.form.get('baixa_48_meses') or None,
+                valor_abatido=request.form.get('valor_abatido') or None,
+                ganho=request.form.get('ganho') or None,
+                custas=request.form.get('custas') or None,
+                custas_deduzidas=request.form.get('custas_deduzidas') or None,
+                protesto=request.form.get('protesto') or None,
+                protesto_deduzido=request.form.get('protesto_deduzido') or None,
+                honorario=request.form.get('honorario') or None,
+                honorario_repassado=request.form.get('honorario_repassado') or None,
+                alvara=request.form.get('alvara') or None,
+                alvara_recebido=request.form.get('alvara_recebido') or None,
+                valor_entrada=request.form.get('valor_entrada') or None,
                 vencimento_entrada=datetime.strptime(request.form.get('vencimento_entrada'), '%Y-%m-%d') if request.form.get('vencimento_entrada') else None,
-                valor_parcelas=float(request.form.get('valor_parcelas') or 0),
-                parcelas=int(request.form.get('parcelas') or 0),
-                parcelas_restantes=int(request.form.get('parcelas_restantes') or 0),
-                vencimento_parcelas=datetime.strptime(request.form.get('vencimento_parcelas'), '%Y-%m-%d') if request.form.get('vencimento_parcelas') else None,
-                qtd_boletos_emitidos=int(request.form.get('qtd_boletos_emitidos') or 0),
-                valor_pg_boleto=float(request.form.get('valor_pg_boleto') or 0),
+                valor_parcelas=request.form.get('valor_parcelas') or None,
+                qtd_boletos=request.form.get('qtd_boletos') or None,
+                valor_pg_boleto=request.form.get('valor_pg_boleto') or None,
                 data_pg_boleto=datetime.strptime(request.form.get('data_pg_boleto'), '%Y-%m-%d') if request.form.get('data_pg_boleto') else None,
                 data_baixa=datetime.strptime(request.form.get('data_baixa'), '%Y-%m-%d') if request.form.get('data_baixa') else None,
-                obs_contabilidade=request.form.get('obs_contabilidade'),
-                obs_contas_receber=request.form.get('obs_contas_receber'),
-                valor_repassado_escritorio=float(request.form.get('valor_repassado_escritorio') or 0)
+                obs_contabilidade=request.form.get('obs_contabilidade') or None,
+                obs_contas_receber=request.form.get('obs_contas_receber') or None,
+                valor_repassado_escritorio=request.form.get('valor_repassado_escritorio') or None
             )
+
             db.session.add(contrato)
             db.session.commit()
+
+            # gera parcelas, se houver
+            if parcelas and valor:
+                valor_parcela = round(valor / parcelas, 2)
+                for i in range(1, parcelas + 1):
+                    vencimento = (vencimento_parcelas or data_contrato or datetime.today()) + timedelta(days=30 * (i - 1))
+                    parcela = Parcela(
+                        contrato_id=contrato.id,
+                        numero=i,
+                        valor=valor_parcela,
+                        vencimento=vencimento,
+                        quitada=False
+                    )
+                    db.session.add(parcela)
+                db.session.commit()
 
             return redirect(url_for('index'))
         except Exception as e:
@@ -127,14 +155,15 @@ def ver_contrato(id):
                 value = request.form.get(field)
                 if value == '':
                     setattr(contrato, field, None)
-                elif field in ['valor_contrato_sistema','valor_abatido','ganho','custas','custas_deduzidas',
-                               'protesto','protesto_deduzido','honorario','honorario_repassado',
-                               'alvara','alvara_recebido','valor_entrada','valor_parcelas','valor_pg_boleto',
-                               'valor_repassado_escritorio']:
+                elif field in ['valor', 'baixa_48_meses', 'valor_abatido', 'ganho', 'custas', 'custas_deduzidas',
+                               'protesto', 'protesto_deduzido', 'honorario', 'honorario_repassado',
+                               'alvara', 'alvara_recebido', 'valor_entrada', 'valor_parcelas',
+                               'valor_pg_boleto', 'valor_repassado_escritorio']:
                     setattr(contrato, field, float(value))
-                elif field in ['parcelas','parcelas_restantes','qtd_boletos_emitidos']:
+                elif field in ['parcelas', 'parcelas_restantes', 'qtd_boletos']:
                     setattr(contrato, field, int(value))
-                elif field in ['vencimento_entrada','vencimento_parcelas','data_pg_boleto','data_baixa']:
+                elif field in ['data_contrato', 'vencimento_parcelas', 'vencimento_entrada',
+                               'data_pg_boleto', 'data_baixa']:
                     setattr(contrato, field, datetime.strptime(value, '%Y-%m-%d'))
                 else:
                     setattr(contrato, field, value)
@@ -142,6 +171,16 @@ def ver_contrato(id):
         return redirect(url_for('ver_contrato', id=id))
 
     return render_template('contrato.html', contrato=contrato, parcelas=parcelas, timedelta=timedelta)
+
+@app.route('/parcela/<int:id>/quitar', methods=['POST'])
+def quitar_parcela(id):
+    parcela = Parcela.query.get_or_404(id)
+    parcela.quitada = True
+    contrato = Contrato.query.get(parcela.contrato_id)
+    if contrato.parcelas_restantes and contrato.parcelas_restantes > 0:
+        contrato.parcelas_restantes -= 1
+    db.session.commit()
+    return redirect(url_for('ver_contrato', id=parcela.contrato_id))
 
 @app.route('/deletar', methods=['POST'])
 def deletar():

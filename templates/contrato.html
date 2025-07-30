@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Contrato {{ contrato.contrato }}</title>
+    <title>Contrato {{ contrato.id }}</title>
 </head>
 <body>
-    <h1>Contrato {{ contrato.contrato }}</h1>
+    <h1>Contrato {{ contrato.id }}</h1>
     <form method="POST">
-        {% for field, value in contrato.__dict__.items() if not field.startswith("_") and field != "id" %}
-            <label>{{ field.replace("_"," ").title() }}:</label>
-            {% if "data" in field or "vencimento" in field %}
-                <input type="date" name="{{ field }}" value="{{ value.strftime('%Y-%m-%d') if value else '' }}"><br>
-            {% elif "obs" in field %}
-                <textarea name="{{ field }}">{{ value or '' }}</textarea><br>
-            {% else %}
-                <input type="text" name="{{ field }}" value="{{ value or '' }}"><br>
+        {% for field, value in contrato.__dict__.items() %}
+            {% if not field.startswith('_') and field != 'id' %}
+                <label>{{ field.replace('_', ' ').capitalize() }}:</label>
+                {% if 'data' in field or 'vencimento' in field %}
+                    <input type="date" name="{{ field }}" value="{{ value.strftime('%Y-%m-%d') if value else '' }}"><br>
+                {% elif value is number %}
+                    <input type="number" step="0.01" name="{{ field }}" value="{{ value or '' }}"><br>
+                {% elif field.startswith('obs') %}
+                    <textarea name="{{ field }}">{{ value or '' }}</textarea><br>
+                {% else %}
+                    <input type="text" name="{{ field }}" value="{{ value or '' }}"><br>
+                {% endif %}
             {% endif %}
         {% endfor %}
         <button type="submit">Salvar Alterações</button>
     </form>
-
     <h2>Parcelas</h2>
-    <ul>
+    <table border="1">
+        <tr>
+            <th>Número</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+            <th>Quitada</th>
+            <th>Ação</th>
+        </tr>
         {% for p in parcelas %}
-            <li>
-                Parcela {{ p.numero }} - R$ {{ p.valor }} - Vencimento {{ p.vencimento.strftime('%d/%m/%Y') }}
-                {% if p.quitada %}
-                    ✅ Quitada
-                {% else %}
-                    <form method="POST" action="{{ url_for('quitar_parcela', id=p.id) }}">
-                        <button type="submit">Quitar</button>
-                    </form>
+        <tr>
+            <td>{{ p.numero }}</td>
+            <td>{{ p.valor }}</td>
+            <td>{{ p.vencimento.strftime('%d/%m/%Y') if p.vencimento else '-' }}</td>
+            <td>{{ 'Sim' if p.quitada else 'Não' }}</td>
+            <td>
+                {% if not p.quitada %}
+                <form method="POST" action="{{ url_for('quitar_parcela', id=p.id) }}">
+                    <button type="submit">Quitar</button>
+                </form>
                 {% endif %}
-            </li>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
-
+    </table>
     <a href="{{ url_for('index') }}">Voltar</a>
 </body>
 </html>

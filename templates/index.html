@@ -1,22 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Contratos</title>
+    <title>Contratos</title>
 </head>
 <body>
     <h1>Lista de Contratos</h1>
-    <a href="{{ url_for('novo') }}">Novo Contrato</a>
-    <ul>
-        {% for contrato in contratos %}
-            <li>
-                <a href="{{ url_for('ver_contrato', contrato_id=contrato.id) }}">
-                    Contrato nº {{ contrato.numero }} - Valor: {{ contrato.valor }}
-                </a>
-            </li>
-        {% else %}
-            <li>Nenhum contrato cadastrado.</li>
-        {% endfor %}
-    </ul>
+    <a href="{{ url_for('novo_contrato') }}">+ Novo Contrato</a>
+    <form method="POST" action="{{ url_for('deletar') }}">
+        <table border="1">
+            <tr>
+                <th>Selecionar</th>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Número</th>
+                <th>Tipo</th>
+                <th>Garantia</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+            {% for c in contratos %}
+            <tr>
+                <td><input type="checkbox" name="ids" value="{{ c.id }}"></td>
+                <td>{{ c.id }}</td>
+                <td>{{ c.cliente or '-' }}</td>
+                <td>{{ c.numero or '-' }}</td>
+                <td>{{ c.tipo_contrato or '-' }}</td>
+                <td>{{ c.garantia or '-' }}</td>
+                <td>{{ c.valor or '-' }}</td>
+                <td><a href="{{ url_for('ver_contrato', id=c.id) }}">Ver</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Deletar Selecionados</button>
+    </form>
+    <a href="{{ url_for('exportar') }}">Exportar Excel</a>
 </body>
 </html>

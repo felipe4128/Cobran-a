@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Novo Contrato</title>
@@ -7,95 +7,66 @@
 <body>
     <h1>Novo Contrato</h1>
     <form method="POST">
-
-        <label>Cooperado:</label>
-        <input type="text" name="cooperado"><br>
-
-        <label>Contrato:</label>
-        <input type="text" name="contrato"><br>
-
-        <label>Tipo:</label>
-        <input type="text" name="tipo"><br>
-
+        <label>Data Contrato:</label>
+        <input type="date" name="data_contrato"><br>
+        <label>Cliente:</label>
+        <input type="text" name="cliente"><br>
+        <label>Número:</label>
+        <input type="text" name="numero"><br>
+        <label>Tipo Contrato:</label>
+        <input type="text" name="tipo_contrato"><br>
         <label>Garantia:</label>
         <input type="text" name="garantia"><br>
-
-        <label>Valor do Contrato no Sistema:</label>
-        <input type="number" step="0.01" name="valor_contrato_sistema"><br>
-
-        <label>Baixa acima de 48 meses:</label>
-        <input type="text" name="baixa_48_meses"><br>
-
-        <label>Valor Abatido:</label>
-        <input type="number" step="0.01" name="valor_abatido"><br>
-
-        <label>Ganho:</label>
-        <input type="number" step="0.01" name="ganho"><br>
-
-        <label>Custas:</label>
-        <input type="number" step="0.01" name="custas"><br>
-
-        <label>Custas Deduídas:</label>
-        <input type="number" step="0.01" name="custas_deduzidas"><br>
-
-        <label>Protesto:</label>
-        <input type="number" step="0.01" name="protesto"><br>
-
-        <label>Protesto Deduído:</label>
-        <input type="number" step="0.01" name="protesto_deduzido"><br>
-
-        <label>Honorário:</label>
-        <input type="number" step="0.01" name="honorario"><br>
-
-        <label>Honorário Repassado:</label>
-        <input type="number" step="0.01" name="honorario_repassado"><br>
-
-        <label>Alvará:</label>
-        <input type="number" step="0.01" name="alvara"><br>
-
-        <label>Alvará Recebido:</label>
-        <input type="number" step="0.01" name="alvara_recebido"><br>
-
-        <label>Valor de Entrada:</label>
-        <input type="number" step="0.01" name="valor_entrada"><br>
-
-        <label>Vencimento Entrada:</label>
-        <input type="date" name="vencimento_entrada"><br>
-
-        <label>Valor das Parcelas:</label>
-        <input type="number" step="0.01" name="valor_parcelas"><br>
-
+        <label>Valor:</label>
+        <input type="number" step="0.01" name="valor"><br>
         <label>Parcelas:</label>
         <input type="number" name="parcelas"><br>
-
-        <label>Parcelas Restantes:</label>
-        <input type="number" name="parcelas_restantes"><br>
-
-        <label>Vencimento das Parcelas:</label>
+        <label>Vencimento Parcelas:</label>
         <input type="date" name="vencimento_parcelas"><br>
-
-        <label>Quantidade de Boletos Emitidos:</label>
-        <input type="number" name="qtd_boletos_emitidos"><br>
-
-        <label>Valor Pago com Boleto:</label>
+        <label>Baixa 48 meses:</label>
+        <input type="number" step="0.01" name="baixa_48_meses"><br>
+        <label>Valor Abatido:</label>
+        <input type="number" step="0.01" name="valor_abatido"><br>
+        <label>Ganho:</label>
+        <input type="number" step="0.01" name="ganho"><br>
+        <label>Custas:</label>
+        <input type="number" step="0.01" name="custas"><br>
+        <label>Custas Deduzidas:</label>
+        <input type="number" step="0.01" name="custas_deduzidas"><br>
+        <label>Protesto:</label>
+        <input type="number" step="0.01" name="protesto"><br>
+        <label>Protesto Deduzido:</label>
+        <input type="number" step="0.01" name="protesto_deduzido"><br>
+        <label>Honorário:</label>
+        <input type="number" step="0.01" name="honorario"><br>
+        <label>Honorário Repassado:</label>
+        <input type="number" step="0.01" name="honorario_repassado"><br>
+        <label>Alvará:</label>
+        <input type="number" step="0.01" name="alvara"><br>
+        <label>Alvará Recebido:</label>
+        <input type="number" step="0.01" name="alvara_recebido"><br>
+        <label>Valor Entrada:</label>
+        <input type="number" step="0.01" name="valor_entrada"><br>
+        <label>Vencimento Entrada:</label>
+        <input type="date" name="vencimento_entrada"><br>
+        <label>Valor Parcelas:</label>
+        <input type="number" step="0.01" name="valor_parcelas"><br>
+        <label>Qtd Boletos:</label>
+        <input type="number" name="qtd_boletos"><br>
+        <label>Valor Pago Boleto:</label>
         <input type="number" step="0.01" name="valor_pg_boleto"><br>
-
-        <label>Data Pg Boleto:</label>
+        <label>Data Pgto Boleto:</label>
         <input type="date" name="data_pg_boleto"><br>
-
-        <label>Data da Baixa:</label>
+        <label>Data Baixa:</label>
         <input type="date" name="data_baixa"><br>
-
-        <label>Obs. Contabilidade:</label>
+        <label>Obs Contabilidade:</label>
         <textarea name="obs_contabilidade"></textarea><br>
-
-        <label>Obs. Contas a Receber:</label>
+        <label>Obs Contas a Receber:</label>
         <textarea name="obs_contas_receber"></textarea><br>
-
-        <label>Valor a Repassar Escritório:</label>
+        <label>Valor Repassado Escritório:</label>
         <input type="number" step="0.01" name="valor_repassado_escritorio"><br>
-
         <button type="submit">Salvar</button>
     </form>
+    <a href="{{ url_for('index') }}">Voltar</a>
 </body>
 </html>
