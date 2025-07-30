@@ -2,45 +2,21 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Contratos</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        a { text-decoration: none; padding: 6px 12px; border-radius: 4px; color: white; }
-        .btn-parcelas { background-color: #28a745; }
-        .btn-editar { background-color: #007bff; }
-        .btn-excluir { background-color: #dc3545; }
-    </style>
 </head>
 <body>
     <h1>Lista de Contratos</h1>
-
-    <a href="{{ url_for('novo_contrato') }}">+ Novo Contrato</a>
-
-    <table>
-        <tr>
-            <th>Número</th>
-            <th>Cliente</th>
-            <th>Valor</th>
-            <th>Parcelas</th>
-            <th>Ações</th>
-        </tr>
+    <a href="{{ url_for('novo_contrato') }}">Novo Contrato</a>
+    <ul>
         {% for contrato in contratos %}
-        <tr>
-            <td>{{ contrato.numero }}</td>
-            <td>{{ contrato.cliente }}</td>
-            <td>R$ {{ '%.2f' % contrato.valor }}</td>
-            <td>{{ contrato.parcelas }}</td>
-            <td>
-                <a href="{{ url_for('parcelas', id=contrato.id) }}" class="btn-parcelas">Parcelas</a>
-                <a href="{{ url_for('editar_contrato', id=contrato.id) }}" class="btn-editar">Editar</a>
-                <a href="{{ url_for('excluir_contrato', id=contrato.id) }}" class="btn-excluir" onclick="return confirm('Tem certeza que deseja excluir este contrato?')">Excluir</a>
-            </td>
-        </tr>
+            <li>
+                <a href="{{ url_for('ver_contrato', contrato_id=contrato.id) }}">
+                    Contrato nº {{ contrato.numero }} - Valor: {{ contrato.valor }}
+                </a>
+            </li>
+        {% else %}
+            <li>Nenhum contrato cadastrado.</li>
         {% endfor %}
-    </table>
+    </ul>
 </body>
 </html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Contrato</title>
+</head>
+<body>
+    <h1>Detalhes do Contrato</h1>
+    {% if contrato %}
+        <p><strong>ID:</strong> {{ contrato.id }}</p>
+        <p><strong>Número:</strong> {{ contrato.numero }}</p>
+        <p><strong>Valor:</strong> {{ contrato.valor }}</p>
+        <p><strong>Garantia:</strong> {{ contrato.garantia }}</p>
+        <p><strong>Parcelas:</strong> {{ contrato.parcelas }}</p>
+    {% else %}
+        <p>Contrato não encontrado.</p>
+    {% endif %}
+    <br>
+    <a href="{{ url_for('index') }}">Voltar</a>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Contrato</title>
+</head>
+<body>
+    <h1>Novo Contrato</h1>
+    <form method="POST">
+        <label>Número do Contrato:</label>
+        <input type="text" name="numero" required><br>
+
+        <label>Valor:</label>
+        <input type="number" name="valor" step="0.01" required><br>
+
+        <label>Garantia:</label>
+        <input type="text" name="garantia"><br>
+
+        <label>Parcelas:</label>
+        <input type="number" name="parcelas" required><br>
+
+        <button type="submit">Salvar</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">Voltar</a>
+</body>
+</html>
