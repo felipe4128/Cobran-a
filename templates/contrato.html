@@ -1,8 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Contrato</title></head>
-<body><h1>Contrato {{ contrato.numero }}</h1>
-<p>Cliente: {{ contrato.cliente }}</p>
-<p>Data: {{ contrato.data_contrato }}</p>
-<p><a href="/contrato/{{ contrato.id }}/parcelas">Gerenciar Parcelas</a></p>
-<a href="/">⬅ Voltar</a></body></html>
+<head>
+    <meta charset="UTF-8">
+    <title>Contrato {{ contrato.contrato }}</title>
+</head>
+<body>
+    <h1>Contrato {{ contrato.contrato }}</h1>
+    <form method="POST">
+        {% for field, value in contrato.__dict__.items() if not field.startswith("_") and field != "id" %}
+            <label>{{ field.replace("_"," ").title() }}:</label>
+            {% if "data" in field or "vencimento" in field %}
+                <input type="date" name="{{ field }}" value="{{ value.strftime('%Y-%m-%d') if value else '' }}"><br>
+            {% elif "obs" in field %}
+                <textarea name="{{ field }}">{{ value or '' }}</textarea><br>
+            {% else %}
+                <input type="text" name="{{ field }}" value="{{ value or '' }}"><br>
+            {% endif %}
+        {% endfor %}
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <h2>Parcelas</h2>
+    <ul>
+        {% for p in parcelas %}
+            <li>
+                Parcela {{ p.numero }} - R$ {{ p.valor }} - Vencimento {{ p.vencimento.strftime('%d/%m/%Y') }}
+                {% if p.quitada %}
+                    ✅ Quitada
+                {% else %}
+                    <form method="POST" action="{{ url_for('quitar_parcela', id=p.id) }}">
+                        <button type="submit">Quitar</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('index') }}">Voltar</a>
+</body>
+</html>
